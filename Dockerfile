@@ -1,5 +1,5 @@
 ## See Dockerfile.ecr-full
-FROM php:8-fpm-alpine
+FROM php:8-cli-alpine
 
 RUN set -xe \
     && apk add --update icu \
@@ -9,7 +9,6 @@ RUN set -xe \
     && docker-php-ext-enable mcrypt \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install tokenizer \
-    && docker-php-ext-install opcache \
     && docker-php-ext-install pdo \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-configure intl \
@@ -20,10 +19,12 @@ RUN set -xe \
     && rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
 
 COPY ./laravel.ini  /usr/local/etc/php/conf.d
-COPY ./xlaravel.pool.conf /usr/local/etc/php-fpm.d/
+
+RUN apk --update add curl \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN apk add mysql-client bash
 
 WORKDIR /var/www
 
-CMD ["php-fpm"]
-
-EXPOSE 9000
+RUN php -v | head -n 1 | grep -q "PHP ${PHP_VERSION}."
