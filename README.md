@@ -7,6 +7,10 @@ Creating a new build with tag '8' without multi-arch support:
     $ docker login 
     $ docker push mmelectrical/php-cli-alpine:8
 
+Sometimes the base php image bakes in libraries in minor versions. For example the tokenizer library. You can run this to check that:
+
+    $ docker run --rm php:8.0-cli-alpine php -i | grep -i token
+
 Creating a new build with tag '8' **with** multi-arch support:
 
     $ docker buildx build --platform linux/arm64,linux/amd64 --push -t mmelectrical/php-cli-alpine:8 -f ./Dockerfile .
