@@ -1,5 +1,5 @@
 ## See Dockerfile.ecr
-FROM php:8.2-cli-alpine
+FROM php:8.3-cli-alpine
 
 RUN set -xe \
     && apk add --update icu \
