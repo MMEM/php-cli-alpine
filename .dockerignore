@@ -2,3 +2,6 @@ README.md
 .gitignore
 .env
 *.log
+.DS_Store
+.idea
+.git
