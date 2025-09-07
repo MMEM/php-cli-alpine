@@ -13,7 +13,7 @@ RUN set -xe \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl \
-    && pecl mailparse-3.1.3 && tar -xvf mailparse-3.1.3.tgz  && cd mailparse-3.1.3/ && phpize \
+    && pecl download mailparse-3.1.3 && tar -xvf mailparse-3.1.3.tgz  && cd mailparse-3.1.3/ && phpize \
     && ./configure \
     && sed -i 's/#if\s!HAVE_MBSTRING/#ifndef MBFL_MBFILTER_H/' ./mailparse.c \
     && make \
