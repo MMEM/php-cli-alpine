@@ -3,7 +3,7 @@ FROM php:8.0-cli-alpine
 
 RUN set -xe \
     && apk add --update icu \
-    && apk add --no-cache --virtual .deps make icu-dev g++ libtool $PHPIZE_DEPS \
+    && apk add --no-cache --virtual .deps make icu-dev g++ libtool libxslt libpng-dev libxml2-dev libxslt-dev $PHPIZE_DEPS \
     && apk add --no-cache libmcrypt-dev \
     && yes | pecl install -o -f mcrypt-1.0.4 \
     && docker-php-ext-enable mcrypt \
@@ -13,6 +13,9 @@ RUN set -xe \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl \
+    && docker-php-ext-install xsl \
+    && docker-php-ext-enable xsl \
+    && docker-php-ext-install gd \
     && pecl download mailparse-3.1.1 && tar -xvf mailparse-3.1.1.tgz  && cd mailparse-3.1.1/ && phpize \
        && ./configure \
        && sed -i 's/#if\s!HAVE_MBSTRING/#ifndef MBFL_MBFILTER_H/' ./mailparse.c \
