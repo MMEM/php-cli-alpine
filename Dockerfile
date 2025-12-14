@@ -16,6 +16,7 @@ RUN set -xe \
     && docker-php-ext-install xsl \
     && docker-php-ext-enable xsl \
     && docker-php-ext-install gd \
+    && docker-php-ext-enable gd \
     && pecl download mailparse-3.1.1 && tar -xvf mailparse-3.1.1.tgz  && cd mailparse-3.1.1/ && phpize \
        && ./configure \
        && sed -i 's/#if\s!HAVE_MBSTRING/#ifndef MBFL_MBFILTER_H/' ./mailparse.c \
