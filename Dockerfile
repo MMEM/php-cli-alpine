@@ -3,7 +3,7 @@ FROM php:8.0-cli-alpine
 
 RUN set -xe \
     && apk add --update icu \
-    && apk add --no-cache --virtual .deps make icu-dev g++ libtool libxslt libpng-dev libxml2-dev libxslt-dev $PHPIZE_DEPS \
+    && apk add --no-cache --virtual .deps make icu-dev g++ libtool libxml2-dev $PHPIZE_DEPS \
     && apk add --no-cache libmcrypt-dev \
     && yes | pecl install -o -f mcrypt-1.0.4 \
     && docker-php-ext-enable mcrypt \
@@ -13,10 +13,6 @@ RUN set -xe \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl \
-    && docker-php-ext-install xsl \
-    && docker-php-ext-enable xsl \
-    && docker-php-ext-install gd \
-    && docker-php-ext-enable gd \
     && pecl download mailparse-3.1.1 && tar -xvf mailparse-3.1.1.tgz  && cd mailparse-3.1.1/ && phpize \
        && ./configure \
        && sed -i 's/#if\s!HAVE_MBSTRING/#ifndef MBFL_MBFILTER_H/' ./mailparse.c \
@@ -26,6 +22,12 @@ RUN set -xe \
     && { find /usr/local/lib -type f -print0 | xargs -0r strip --strip-all -p 2>/dev/null || true; } \
     && apk del .deps \
     && rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
+
+RUN apk add --no-cache libxslt libxslt-dev \
+    && docker-php-ext-install xsl
+
+RUN apk add --no-cache libpng-dev \
+    && docker-php-ext-install gd
 
 COPY ./laravel.ini  /usr/local/etc/php/conf.d
 
